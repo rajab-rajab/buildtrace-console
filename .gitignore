@@ -1,0 +1,12 @@
+/devpost/learner-profile.md
+.env
+.env.*
+!.env.example
+/output/
+__pycache__/
+*.py[cod]
+
+# Locally generated narration intermediates; the final demo video is tracked.
+build-trace-neural-voiceover.mp3
+build-trace-voiceover.mp3
+build-trace-voiceover.wav

@@ -1,0 +1,13 @@
+Most AI code generators operate as black boxes. You give them a prompt, files appear, and it can be hard to see what happened or whether the result actually works. BuildTrace makes that process visible, local, and verifiable.
+
+This is a single-window developer console for building a practical Python project: a SQLite-backed command-line task manager. The prompt and controls are on the left, live build activity runs through the middle, and generated files plus terminal output stay visible on the right.
+
+For a dependable demo, BuildTrace can use an offline template. When an OpenAI API key is available, it can also generate the same structured project with an AI model. Either way, the project is written safely into its own output folder.
+
+As the build proceeds, each step is shown in real time: the database module, command-line app, and README are created; the files populate the inspector tabs; and the generated project is initialized and tested in the embedded terminal.
+
+Now for the proof. From the terminal, we add a task named Submit Devpost Video. Then we list the saved tasks. The returned row confirms that the generated command-line app wrote to, and read from, a local SQLite database.
+
+BuildTrace is designed around transparency and confidence. You can see the request, the files, the execution steps, and the result—all in one place. It was built in four testable slices with Python, CustomTkinter, SQLite, subprocess streaming, and OpenAI JSON mode, backed by twelve automated tests.
+
+That is BuildTrace: transparent AI-assisted development, with local execution proof from prompt to working project.

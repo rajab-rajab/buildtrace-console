@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BuildTrace — App Map</title>
+    <style>
+      :root { color-scheme: dark; --bg:#111216; --surface:#181a20; --border:#2d313e; --text:#f3f4f6; --muted:#a0a7b4; --indigo:#6366f1; --green:#10b981; --amber:#f59e0b; }
+      * { box-sizing: border-box; }
+      body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+      main { max-width:960px; margin:auto; padding:40px 24px 56px; }
+      h1,h2 { line-height:1.15; } h1 { margin:0 0 8px; font-size:2.2rem; } h2 { margin-top:36px; font-size:1.25rem; }
+      .lede,.muted { color:var(--muted); } .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; margin:16px 0; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; } .chip { border-left:3px solid var(--indigo); padding:8px 12px; background:#20232c; }
+      code { color:#d7dcff; font:0.92em ui-monospace,Consolas,monospace; } a { color:#aeb5ff; } svg { width:100%; height:auto; display:block; background:#0b0c0e; border:1px solid var(--border); border-radius:8px; }
+      .route { counter-reset:route; list-style:none; padding:0; } .route li { counter-increment:route; padding:14px 14px 14px 50px; position:relative; border-bottom:1px solid var(--border); }
+      .route li:last-child { border:0; } .route li::before { content:counter(route); position:absolute; left:14px; top:14px; width:24px; height:24px; text-align:center; border-radius:50%; background:var(--indigo); font-weight:700; }
+      kbd { border:1px solid var(--border); border-radius:4px; padding:1px 5px; background:#0b0c0e; } summary { cursor:pointer; color:#d7dcff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="muted">Offline reference map · source snapshot: commit <code>9635be1</code></p>
+      <h1>BuildTrace</h1>
+      <p class="lede">A local CustomTkinter developer console that visibly generates, inspects, and verifies a SQLite-backed Python task-manager project.</p>
+
+      <section class="card" aria-labelledby="purpose">
+        <h2 id="purpose">What the app does</h2>
+        <div class="grid">
+          <div class="chip"><strong>Choose a path</strong><br />Use live OpenAI generation when a key is available, or the reliable offline template.</div>
+          <div class="chip"><strong>Make work visible</strong><br />Show five build steps and tabs for the three generated files.</div>
+          <div class="chip"><strong>Prove it runs</strong><br />Initialize the generated SQLite app and run controlled CLI commands in the terminal.</div>
+        </div>
+      </section>
+
+      <section aria-labelledby="flow">
+        <h2 id="flow">One build, traced through the code</h2>
+        <svg viewBox="0 0 900 210" role="img" aria-label="User action flows through the host UI and build controller to generated files and terminal proof">
+          <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6366f1" /></marker></defs>
+          <rect x="30" y="62" width="210" height="86" rx="8" fill="#181a20" stroke="#2d313e"/><text x="135" y="96" fill="#f3f4f6" text-anchor="middle" font-family="system-ui" font-weight="700">BuildInputPanel</text><text x="135" y="120" fill="#a0a7b4" text-anchor="middle" font-family="system-ui">Click a build path</text>
+          <path d="M245 105 H345" stroke="#6366f1" stroke-width="3" marker-end="url(#arrow)"/>
+          <rect x="355" y="62" width="210" height="86" rx="8" fill="#181a20" stroke="#2d313e"/><text x="460" y="96" fill="#f3f4f6" text-anchor="middle" font-family="system-ui" font-weight="700">BuildController</text><text x="460" y="120" fill="#a0a7b4" text-anchor="middle" font-family="system-ui">Validate, write, run</text>
+          <path d="M570 105 H670" stroke="#6366f1" stroke-width="3" marker-end="url(#arrow)"/>
+          <rect x="680" y="40" width="190" height="130" rx="8" fill="#181a20" stroke="#2d313e"/><text x="775" y="78" fill="#10b981" text-anchor="middle" font-family="system-ui" font-weight="700">Visible proof</text><text x="775" y="106" fill="#a0a7b4" text-anchor="middle" font-family="system-ui">File tabs</text><text x="775" y="130" fill="#a0a7b4" text-anchor="middle" font-family="system-ui">Terminal output</text>
+        </svg>
+      </section>
+
+      <section aria-labelledby="route">
+        <h2 id="route">Reference code route</h2>
+        <p class="muted">This is a reference route, not a claim that you toured every line interactively.</p>
+        <ol class="route">
+          <li><code>src/ui/build_input_panel.py → BuildInputPanel</code><br />This creates the editable prompt and the two deliberate entry points: live generation or the offline template.</li>
+          <li><code>src/app_shell.py → start_live_build(), _begin_build(), _poll_ui_events()</code><br />This keeps network and file work off the GUI thread, then returns progress, file tabs, and completion events safely to the visible interface.</li>
+          <li><code>src/build_controller.py → build_live()</code> and <code>src/generation_service.py → generate()</code><br />The live JSON payload is parsed and locally validated. If a key, timeout, or network call fails, the same controller deliberately uses <code>templates/task_manager_fallback.json</code> and still writes and runs real files.</li>
+        </ol>
+      </section>
+
+      <section class="card" aria-labelledby="change">
+        <h2 id="change">To change this, start here</h2>
+        <ul>
+          <li>Change the fixed demo prompt or button labels in <code>src/ui/build_input_panel.py</code>.</li>
+          <li>Change the generated task-manager contract in <code>templates/task_manager_fallback.json</code>; update <code>tests/test_generated_task_manager.py</code> with it.</li>
+          <li>Change output validation rules in <code>src/payload_validator.py</code>; the regression coverage starts in <code>tests/test_payload_validator.py</code>.</li>
+          <li>Change live-generation behavior in <code>src/generation_service.py</code>; verify its contract with <code>tests/test_generation_service.py</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card" aria-labelledby="practice">
+        <h2 id="practice">A practice to reuse</h2>
+        <p>BuildTrace’s core promise is not merely “call an AI model”; it is “show a user a real, inspectable result.” That is why <code>tests/test_build_controller_live.py</code> proves an API failure still produces a validated fallback project, and <code>tests/test_offline_e2e.py</code> proves the files initialize for real. For another agent-backed app, identify the visible proof first, then write one check for the live path and one for the safe fallback.</p>
+      </section>
+
+      <details class="card">
+        <summary>Run it again</summary>
+        <pre><code>&amp; 'C:\Users\RAJAB BAIG\AppData\Local\Programs\Python\Python311\python.exe' app.py</code></pre>
+        <p>Use <kbd>Use Offline Template</kbd> for a credential-free demo, or <kbd>Build &amp; Verify Project</kbd> when the LLM badge is ready. This map is a snapshot and may drift after later commits.</p>
+      </details>
+    </main>
+  </body>
+</html>
