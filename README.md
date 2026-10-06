@@ -2,6 +2,10 @@
 
 BuildTrace is a local CustomTkinter developer console that makes one AI-assisted build visible: it generates a SQLite-backed Python CLI task manager, writes the files to disk, lets you inspect them, and runs the result in an embedded terminal.
 
+## License
+
+This project is available under the [MIT License](LICENSE).
+
 ## Run locally
 
 Use Python 3.11 or newer. From the repository root:
